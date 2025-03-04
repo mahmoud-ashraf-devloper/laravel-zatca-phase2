@@ -612,7 +612,7 @@ Regularly test your integration using the `zatca:test-connection` command to ens
 
 If you're upgrading from version 1.x:
 
-1. Update your dependencies: `composer require khaled-haj-salem/laravel-zatca-phase2:^2.0`
+1. Update your dependencies: `composer require khaledhajsalem/laravel-zatca-phase2:^2.0`
 2. Run the upgrade command: `php artisan zatca:upgrade`
 3. Check the updated configuration file for new options
 4. Review the changes in field mapping structure
