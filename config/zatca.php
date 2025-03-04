@@ -3,23 +3,50 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Invoice and Credit Note Models Configuration
+    | Invoice Model and Table Configuration
     |--------------------------------------------------------------------------
     |
-    | Specify the fully qualified class names of your Invoice and Credit Note
-    | models and their corresponding table names. These will be used by the
-    | package for ZATCA integration.
+    | Specify the fully qualified class name of your Invoice model and the
+    | corresponding database table name. These will be used by the package
+    | for ZATCA integration.
     |
     */
     'invoice_model' => App\Models\Invoice::class,
     'invoice_table' => 'invoices', // Default table name that can be overridden
 
-    'credit_note_model' => App\Models\CreditNote::class, // Can be the same as invoice model if you use a type field
-    'credit_note_table' => 'invoices', // Can be the same as invoice table if credit notes are in the same table
+    'credit_note_model' => App\Models\CreditNote::class, // Can be the same as invoice model
+    'credit_note_table' => 'invoices', // Can be the same as invoice table
 
     /*
     |--------------------------------------------------------------------------
-    | ZATCA API Configuration
+    | Environment Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure different environments for ZATCA integration (sandbox/production)
+    |
+    */
+    'environment' => env('ZATCA_ENVIRONMENT', 'sandbox'), // Options: sandbox, production
+
+    'environments' => [
+        'sandbox' => [
+            'base_url' => env('ZATCA_SANDBOX_URL', 'https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/sandbox'),
+            'compliance_url' => '/compliance',
+            'reporting_url' => '/invoices/reporting/single',
+            'clearance_url' => '/invoices/clearance/single',
+            'status_url' => '/invoices/status',
+        ],
+        'production' => [
+            'base_url' => env('ZATCA_API_URL', 'https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal'),
+            'compliance_url' => '/compliance',
+            'reporting_url' => '/invoices/reporting/single',
+            'clearance_url' => '/invoices/clearance/single',
+            'status_url' => '/invoices/status',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Legacy API Configuration (for backward compatibility)
     |--------------------------------------------------------------------------
     */
     'api' => [
@@ -28,6 +55,21 @@ return [
         'reporting_url' => '/invoices/reporting/single',
         'clearance_url' => '/invoices/clearance/single',
         'status_url' => '/invoices/status',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sandbox Credentials
+    |--------------------------------------------------------------------------
+    |
+    | Sandbox credentials for testing purposes
+    |
+    */
+    'sandbox' => [
+        'certificate' => env('ZATCA_SANDBOX_CERTIFICATE'),
+        'private_key' => env('ZATCA_SANDBOX_PRIVATE_KEY'),
+        'certificate_id' => env('ZATCA_SANDBOX_CERTIFICATE_ID'),
+        'pih' => env('ZATCA_SANDBOX_PIH', ''),
     ],
 
     /*
@@ -126,7 +168,7 @@ return [
     'field_mapping' => [
         // Basic invoice information
         'invoice_number' => 'number',
-        'invoice_type' => 'type', // 381 for standard, 383 for debit note, etc.
+        'invoice_type' => 'type', // 381 for credit note, 383 for debit note, 388 for standard invoice
         'issue_date' => 'created_at',
         'issue_time' => 'created_at',
         'invoice_currency_code' => 'currency_code', // SAR, USD, etc.

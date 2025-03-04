@@ -7,6 +7,7 @@ use KhaledHajSalem\ZatcaPhase2\Commands\CheckZatcaStatusCommand;
 use KhaledHajSalem\ZatcaPhase2\Commands\GenerateCertificateCommand;
 use KhaledHajSalem\ZatcaPhase2\Commands\InstallZatcaCommand;
 use KhaledHajSalem\ZatcaPhase2\Commands\TestZatcaConnectionCommand;
+use KhaledHajSalem\ZatcaPhase2\Commands\TestZatcaSandboxCommand;
 use KhaledHajSalem\ZatcaPhase2\Services\CertificateService;
 use KhaledHajSalem\ZatcaPhase2\Services\DocumentPdfService;
 use KhaledHajSalem\ZatcaPhase2\Services\InvoiceService;
@@ -47,6 +48,7 @@ class ZatcaPhase2ServiceProvider extends ServiceProvider
                 GenerateCertificateCommand::class,
                 TestZatcaConnectionCommand::class,
                 CheckZatcaStatusCommand::class,
+                TestZatcaSandboxCommand::class
             ]);
         }
     }

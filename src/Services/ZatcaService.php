@@ -7,7 +7,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 use KhaledHajSalem\ZatcaPhase2\Exceptions\ZatcaException;
 use KhaledHajSalem\ZatcaPhase2\Support\QrCodeGenerator;
-use KhaledHajSalem\ZatcaPhase2\Support\XmlGenerator;
 
 class ZatcaService
 {
@@ -30,7 +29,7 @@ class ZatcaService
      *
      * @var \GuzzleHttp\Client
      */
-    protected $client;
+    public $client;
 
     /**
      * ZATCA base API URL.
@@ -38,6 +37,34 @@ class ZatcaService
      * @var string
      */
     protected $baseUrl;
+
+    /**
+     * ZATCA compliance URL.
+     *
+     * @var string
+     */
+    protected $complianceUrl;
+
+    /**
+     * ZATCA reporting URL.
+     *
+     * @var string
+     */
+    protected $reportingUrl;
+
+    /**
+     * ZATCA clearance URL.
+     *
+     * @var string
+     */
+    protected $clearanceUrl;
+
+    /**
+     * ZATCA status URL.
+     *
+     * @var string
+     */
+    public $statusUrl;
 
     /**
      * Create a new ZATCA service instance.
@@ -50,12 +77,49 @@ class ZatcaService
     {
         $this->certificateService = $certificateService;
         $this->invoiceService = $invoiceService;
-        $this->baseUrl = config('zatca.api.base_url');
+
+        // Get current environment
+        $environment = config('zatca.environment', 'sandbox');
+        $environmentConfig = config("zatca.environments.{$environment}", []);
+
+        // Set up API URLs
+        $this->baseUrl = $environmentConfig['base_url'] ?? config('zatca.api.base_url');
+        $this->complianceUrl = $environmentConfig['compliance_url'] ?? config('zatca.api.compliance_url');
+        $this->reportingUrl = $environmentConfig['reporting_url'] ?? config('zatca.api.reporting_url');
+        $this->clearanceUrl = $environmentConfig['clearance_url'] ?? config('zatca.api.clearance_url');
+        $this->statusUrl = $environmentConfig['status_url'] ?? config('zatca.api.status_url');
+
+        // Initialize HTTP client
         $this->client = new Client([
             'base_uri' => $this->baseUrl,
             'timeout' => 30,
             'verify' => true, // Set to false for testing if needed
         ]);
+
+        Log::channel(config('zatca.log_channel', 'zatca'))->info('ZATCA Service initialized', [
+            'environment' => $environment,
+            'base_url' => $this->baseUrl
+        ]);
+    }
+
+    /**
+     * Check if sandbox environment is active.
+     *
+     * @return bool
+     */
+    public function isSandboxMode()
+    {
+        return config('zatca.environment', 'sandbox') === 'sandbox';
+    }
+
+    /**
+     * Check if production environment is active.
+     *
+     * @return bool
+     */
+    public function isProductionMode()
+    {
+        return config('zatca.environment', 'sandbox') === 'production';
     }
 
     /**
@@ -212,7 +276,7 @@ class ZatcaService
     public function checkInvoiceStatus($invoice)
     {
         try {
-            $url = config('zatca.api.status_url');
+            $url = $this->statusUrl;
 
             if (!$invoice->zatca_invoice_uuid) {
                 throw new ZatcaException('Invoice does not have a ZATCA UUID');
@@ -237,7 +301,7 @@ class ZatcaService
     }
 
     /**
-     * Submit a document to ZATCA for reporting or clearance.
+     * Submit an invoice to ZATCA for reporting or clearance.
      *
      * @param  mixed  $document  Invoice or credit note
      * @param  string  $type  Either 'reporting' or 'clearance'
@@ -247,8 +311,8 @@ class ZatcaService
     protected function submitDocument($document, $type)
     {
         $endpoint = $type === 'reporting'
-            ? config('zatca.api.reporting_url')
-            : config('zatca.api.clearance_url');
+            ? $this->reportingUrl
+            : $this->clearanceUrl;
 
         $headers = $this->getAuthHeaders();
 
@@ -264,6 +328,16 @@ class ZatcaService
             $payload['documentType'] = 'CreditNote';
         }
 
+        // Log the request in development
+        if (app()->environment('local', 'development')) {
+            Log::channel(config('zatca.log_channel', 'zatca'))->debug('ZATCA API Request', [
+                'endpoint' => $endpoint,
+                'environment' => $this->isSandboxMode() ? 'sandbox' : 'production',
+                'uuid' => $document->zatca_invoice_uuid,
+                'document_type' => $this->invoiceService->isCreditNote($document) ? 'credit_note' : 'invoice',
+            ]);
+        }
+
         $response = $this->client->request('POST', $endpoint, [
             'headers' => $headers,
             'json' => $payload,
@@ -273,34 +347,27 @@ class ZatcaService
     }
 
     /**
-     * Submit an invoice to ZATCA for reporting or clearance.
-     *
-     * @param  mixed  $invoice
-     * @param  string  $type  Either 'reporting' or 'clearance'
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    protected function submitInvoice($invoice, $type)
-    {
-        return $this->submitDocument($invoice, $type);
-    }
-
-    /**
      * Get ZATCA API authentication headers.
      *
      * @return array
      */
     protected function getAuthHeaders()
     {
-        // Get the certificate data
-        $certificateData = $this->certificateService->getCertificateData();
+        if ($this->isSandboxMode()) {
+            // Use sandbox credentials
+            $certificateId = config('zatca.sandbox.certificate_id');
+            $pih = config('zatca.sandbox.pih');
+        } else {
+            // Use production credentials
+            $certificateData = $this->certificateService->getCertificateData();
+            $certificateId = $certificateData['certificate_id'];
+            $pih = config('zatca.pih');
+        }
 
-        // In a real implementation, we would generate proper auth headers
-        // based on the certificate and ZATCA requirements
         return [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Authorization' => 'Basic ' . base64_encode($certificateData['certificate_id'] . ':' . config('zatca.pih')),
+            'Authorization' => 'Basic ' . base64_encode($certificateId . ':' . $pih),
         ];
     }
 
@@ -316,6 +383,7 @@ class ZatcaService
         Log::channel(config('zatca.log_channel', 'zatca'))->error($message, [
             'error' => $exception->getMessage(),
             'trace' => $exception->getTraceAsString(),
+            'environment' => $this->isSandboxMode() ? 'sandbox' : 'production',
         ]);
     }
 }

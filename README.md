@@ -16,6 +16,7 @@ A comprehensive Laravel package for integrating with ZATCA (Saudi Arabia Tax Aut
   - [Model Integration](#model-integration)
   - [Field Mapping](#field-mapping)
   - [Credit Note Configuration](#credit-note-configuration)
+  - [Sandbox Mode](#sandbox-mode)
 - [Usage](#usage)
   - [Invoice Reporting and Clearance](#invoice-reporting-and-clearance)
   - [Credit Note Handling](#credit-note-handling)
@@ -103,6 +104,16 @@ After installation, configure the package in your `.env` file:
 # ZATCA API Configuration
 ZATCA_API_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
 ZATCA_PRODUCTION=false
+
+# Environment Options: 'sandbox' or 'production'
+ZATCA_ENVIRONMENT=sandbox
+
+# Sandbox Configuration
+ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/sandbox
+ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
+ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
+ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
+ZATCA_SANDBOX_PIH=your-sandbox-pih
 
 # Organization Details
 ZATCA_ORG_NAME="Your Company Name"
@@ -227,6 +238,29 @@ This flexibility supports different implementation approaches:
 1. **Separate Models**: If your credit notes and invoices are separate models
 2. **Type Field**: If you use a single model with a type field to distinguish credit notes
 3. **Separate Tables**: If you store credit notes and invoices in different tables
+
+
+### Sandbox Mode
+
+The package supports ZATCA's sandbox environment for testing purposes before moving to production.
+
+#### Configuration
+
+Add these settings to your `.env` file:
+
+```env
+# Use sandbox mode
+ZATCA_ENVIRONMENT=sandbox
+
+# Sandbox URL (if different from default)
+ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/sandbox
+
+# Sandbox credentials
+ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
+ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
+ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
+ZATCA_SANDBOX_PIH=your-sandbox-pih
+```
 
 ## Usage
 

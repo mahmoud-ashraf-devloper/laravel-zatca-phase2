@@ -97,6 +97,11 @@ class CertificateService
      */
     public function getCertificateData()
     {
+        // Check if we're in sandbox mode
+        if (config('zatca.environment', 'sandbox') === 'sandbox') {
+            return $this->getSandboxCertificateData();
+        }
+
         $privateKeyPath = "{$this->certificatePath}/private.key";
         $certificatePath = "{$this->certificatePath}/certificate.pem";
 
@@ -112,6 +117,38 @@ class CertificateService
     }
 
     /**
+     * Get sandbox certificate data.
+     *
+     * @return array
+     * @throws \KhaledHajSalem\ZatcaPhase2\Exceptions\ZatcaException
+     */
+    protected function getSandboxCertificateData()
+    {
+        $certificate = config('zatca.sandbox.certificate');
+        $privateKey = config('zatca.sandbox.private_key');
+        $certificateId = config('zatca.sandbox.certificate_id');
+
+        if (empty($certificate) || empty($privateKey) || empty($certificateId)) {
+            throw new ZatcaException('Sandbox certificate data is not configured. Check your zatca.sandbox configuration.');
+        }
+
+        // If paths provided, read the files
+        if (File::exists($certificate)) {
+            $certificate = File::get($certificate);
+        }
+
+        if (File::exists($privateKey)) {
+            $privateKey = File::get($privateKey);
+        }
+
+        return [
+            'private_key' => $privateKey,
+            'certificate' => $certificate,
+            'certificate_id' => $certificateId,
+        ];
+    }
+
+    /**
      * Sign an XML string with the certificate.
      *
      * @param  string  $xml
@@ -121,7 +158,10 @@ class CertificateService
     public function signXml($xml)
     {
         try {
-            $certData = $this->getCertificateData();
+            // Get appropriate certificate data (sandbox or production)
+            $certData = (config('zatca.environment', 'sandbox') === 'sandbox')
+                ? $this->getSandboxCertificateData()
+                : $this->getCertificateData();
 
             // In a real implementation, you would properly sign the XML
             // using the private key and certificate
@@ -147,6 +187,7 @@ class CertificateService
             Log::channel(config('zatca.log_channel', 'zatca'))->error('XML signing failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'environment' => config('zatca.environment', 'sandbox'),
             ]);
 
             throw new ZatcaException('Failed to sign XML: ' . $e->getMessage(), 0, $e);
