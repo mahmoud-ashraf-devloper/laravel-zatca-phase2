@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/khaledhajsalem/laravel-zatca-phase2.svg?style=flat-square)](https://packagist.org/packages/khaledhajsalem/laravel-zatca-phase2)
 [![Total Downloads](https://img.shields.io/packagist/dt/khaledhajsalem/laravel-zatca-phase2.svg?style=flat-square)](https://packagist.org/packages/khaledhajsalem/laravel-zatca-phase2)
-[![License](https://img.shields.io/packagist/l/khaledhajsalem/laravel-zatca-phase2.svg?style=flat-square)](LICENSE.md)
+[![License](https://img.shields.io/packagist/l/khaledhajsalem/laravel-zatca-phase2.svg?style=flat-square)](LICENSE)
 
 A comprehensive Laravel package for integrating with ZATCA (Saudi Arabia Tax Authority) Phase 2 e-invoicing requirements. This package provides tools for generating, reporting, and clearing invoices and credit notes according to ZATCA Phase 2 specifications.
 
@@ -720,4 +720,4 @@ If you discover any security issues, please email [khaledhajsalem@hotmail.com](m
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
