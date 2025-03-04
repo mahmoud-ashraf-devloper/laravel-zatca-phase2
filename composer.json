@@ -1,0 +1,64 @@
+{
+  "name": "khaledhajsalem/laravel-zatca-phase2",
+  "description": "Laravel package for implementing ZATCA (Saudi e-invoicing) Phase 2 compliance",
+  "version": "1.0.0",
+  "keywords": [
+    "laravel",
+    "zatca",
+    "zatca phase 2",
+    "phase 2",
+    "e-invoicing",
+    "saudi",
+    "vat",
+    "fatoorah"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Khaled Haj Salem",
+      "email": "khaledhajsalem@hotmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4|^8.3",
+    "illuminate/support": "^8.0|^9.0|^10.0",
+    "illuminate/database": "^8.0|^9.0|^10.0",
+    "guzzlehttp/guzzle": "^7.0",
+    "spatie/array-to-xml": "^3.0",
+    "simplesoftwareio/simple-qrcode": "^4.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0|^10.0",
+    "orchestra/testbench": "^6.0|^7.0|^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "KhaledHajSalem\\ZatcaPhase2\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "KhaledHajSalem\\ZatcaPhase2\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "KhaledHajSalem\\ZatcaPhase2\\ZatcaPhase2ServiceProvider"
+      ],
+      "aliases": {
+        "Zatca": "KhaledHajSalem\\ZatcaPhase2\\Facades\\Zatca"
+      }
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  }
+}
