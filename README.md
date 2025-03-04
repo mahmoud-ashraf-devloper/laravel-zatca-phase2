@@ -54,8 +54,8 @@ A comprehensive Laravel package for integrating with ZATCA (Saudi Arabia Tax Aut
 
 ## Requirements
 
-- PHP 7.4 or higher
-- Laravel 8.0 or higher
+- PHP 8.1 or higher
+- Laravel 9.0 or higher
 - GuzzleHTTP 7.0 or higher
 - OpenSSL extension
 - JSON extension
