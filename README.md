@@ -103,9 +103,8 @@ After installation, configure the package in your `.env` file:
 ```env
 # ZATCA API Configuration
 ZATCA_API_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
-ZATCA_PRODUCTION=false
 
-# Environment Options: 'sandbox' or 'production'
+# ZATCA Environment Options: 'sandbox' or 'production'
 ZATCA_ENVIRONMENT=sandbox
 
 # Sandbox Configuration
