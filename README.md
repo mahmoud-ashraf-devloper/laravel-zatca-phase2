@@ -396,8 +396,6 @@ This creates a certificate request (CSR) that you submit to the ZATCA portal. Af
 
 ## Advanced Usage
 
-## Advanced Usage
-
 ### PDF Generation
 
 Generate professional PDF documents for invoices and credit notes:
