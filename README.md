@@ -469,8 +469,6 @@ php artisan zatca:test-sandbox
 This allows you to validate your integration without affecting production systems.
 
 
-## Advanced Usage
-
 ### PDF Generation
 
 Generate professional PDF documents for invoices and credit notes:
