@@ -386,15 +386,88 @@ The QR code contains the required ZATCA data in TLV (Tag-Length-Value) format, i
 
 ### Certificate Management
 
-Generate a certificate for ZATCA compliance:
+#### ZATCA Certificate Lifecycle
+
+The ZATCA e-invoicing system requires digital certificates for document signing. Our package streamlines this process, but some steps require interaction with ZATCA's systems:
+
+##### 1. Certificate Signing Request (CSR) Generation
+
+Generate a Certificate Signing Request with your organization details:
 
 ```bash
 php artisan zatca:generate-certificate
 ```
 
-This creates a certificate request (CSR) that you submit to the ZATCA portal. After obtaining the signed certificate, save it in the configured certificates path.
+This command:
+- Creates a private key (stored securely at `storage/app/certificates/private.key`)
+- Generates a CSR file at `storage/app/certificates/certificate.csr`
+- Incorporates your organization details from configuration
 
-## Advanced Usage
+##### 2. CSR Submission to ZATCA Portal
+
+With the CSR generated, you must submit it to ZATCA for verification:
+
+1. Access the [ZATCA Portal](https://fatoora.zatca.gov.sa)
+2. Navigate to the E-Invoicing section
+3. Select "Certificate Management"
+4. Upload the CSR file (`certificate.csr`)
+5. Complete the verification process as required by ZATCA
+6. Note the Certificate Request ID for future reference
+
+_Note: This step requires ZATCA account access and may involve business verification processes. Consult ZATCA documentation for current requirements._
+
+##### 3. Certificate Retrieval
+
+After ZATCA approves your request (typically within 1-3 business days):
+
+1. Return to the ZATCA Portal
+2. Navigate to the Certificate Management section
+3. Download your approved certificate
+4. Save the certificate file
+
+##### 4. Certificate Installation
+
+Register the approved certificate with our package:
+
+```bash
+php artisan zatca:save-certificate /path/to/downloaded-certificate.pem --type=compliance
+```
+
+For production certificates:
+
+```bash
+php artisan zatca:save-certificate /path/to/production-certificate.pem --type=production
+```
+
+This command:
+
+- Verifies the certificate validity
+- Extracts the certificate details (issue date, expiry date, certificate ID)
+- Stores the certificate securely within your application
+- Sets up the certificate for e-invoice signing
+
+##### 5. Verification
+
+Confirm your certificate is properly configured:
+
+```bash
+php artisan zatca:test-connection
+```
+
+#### Certificate Renewal
+
+ZATCA certificates have limited validity periods. Monitor expiration dates and generate new CSRs before certificates expire to maintain compliance.
+
+#### Sandbox Certificates
+
+For development and testing, use sandbox mode with test certificates:
+
+```bash
+php artisan zatca:test-sandbox
+```
+
+This allows you to validate your integration without affecting production systems.
+
 
 ## Advanced Usage
 
@@ -556,7 +629,14 @@ php artisan zatca:check-status
 
 # Check only credit notes with specific status
 php artisan zatca:check-status --model=credit_note --status=submitted
+
+# Save a certificate received from ZATCA
+php artisan zatca:save-certificate /path/to/certificate.pem --type=compliance
+
+# Save a production certificate
+php artisan zatca:save-certificate /path/to/production.pem --type=production
 ```
+
 
 The status checking command helps you monitor and update the status of documents submitted to ZATCA. It can be scheduled to run automatically to keep statuses up to date.
 
