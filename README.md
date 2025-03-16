@@ -108,7 +108,7 @@ ZATCA_API_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
 ZATCA_ENVIRONMENT=sandbox
 
 # Sandbox Configuration
-ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/sandbox
+ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
 ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
 ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
 ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
