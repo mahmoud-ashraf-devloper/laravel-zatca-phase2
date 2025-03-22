@@ -102,13 +102,14 @@ After installation, configure the package in your `.env` file:
 
 ```env
 # ZATCA API Configuration
-ZATCA_API_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
+# 'https://gw-fatoora.zatca.gov.sa' or 'https://gw-apic-gov.gazt.gov.sa'
+ZATCA_API_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
 
 # ZATCA Environment Options: 'sandbox' or 'production'
 ZATCA_ENVIRONMENT=sandbox
 
 # Sandbox Configuration
-ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
+ZATCA_SANDBOX_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
 ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
 ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
 ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
@@ -245,7 +246,7 @@ Add these settings to your `.env` file:
 ZATCA_ENVIRONMENT=sandbox
 
 # Sandbox URL (if different from default)
-ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/sandbox
+ZATCA_SANDBOX_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
 
 # Sandbox credentials
 ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
