@@ -112,17 +112,10 @@ ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal
 ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
 ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
 ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
-ZATCA_SANDBOX_PIH=your-sandbox-pih
 
 # Organization Details
 ZATCA_ORG_NAME="Your Company Name"
 ZATCA_TAX_NUMBER="Your Tax Number"
-
-# PIH (Production Integration Handler)
-ZATCA_PIH="Your PIH from ZATCA"
-
-# Invoice Threshold for Clearance (in SAR)
-ZATCA_CLEARANCE_THRESHOLD=1000
 
 # Logging
 ZATCA_LOG_CHANNEL=zatca
@@ -258,7 +251,6 @@ ZATCA_SANDBOX_URL=https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal/s
 ZATCA_SANDBOX_CERTIFICATE=/path/to/sandbox-certificate.pem
 ZATCA_SANDBOX_PRIVATE_KEY=/path/to/sandbox-private.key
 ZATCA_SANDBOX_CERTIFICATE_ID=your-sandbox-certificate-id
-ZATCA_SANDBOX_PIH=your-sandbox-pih
 ```
 
 ## Usage
