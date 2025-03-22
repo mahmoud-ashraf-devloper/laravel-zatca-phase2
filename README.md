@@ -101,12 +101,17 @@ php artisan migrate
 After installation, configure the package in your `.env` file:
 
 ```env
-# ZATCA API Configuration
-# 'https://gw-fatoora.zatca.gov.sa' or 'https://gw-apic-gov.gazt.gov.sa'
-ZATCA_API_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
 
-# ZATCA Environment Options: 'sandbox' or 'production'
-ZATCA_ENVIRONMENT=sandbox
+
+# ZATCA Environment Options: 'sandbox', 'simulation' or 'production'
+ZATCA_ENVIRONMENT=sandboxv
+
+# ZATCA API Configuration
+# for 'sandbox' Environment    use 'https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal'
+# for 'simulation' Environment use 'https://gw-fatoora.zatca.gov.sa/e-invoicing/simulation'
+# for 'production' Environment use 'https://gw-fatoora.zatca.gov.sa/e-invoicing/core'
+
+ZATCA_API_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
 
 # Sandbox Configuration
 ZATCA_SANDBOX_URL=https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal
