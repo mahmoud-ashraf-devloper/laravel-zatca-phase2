@@ -25,7 +25,7 @@
     "guzzlehttp/guzzle": "^7.0",
     "laravel/framework": "^9.0|^10.0|^11.0",
     "robrichards/xmlseclibs": "^3.1",
-    "simplesoftwareio/simple-qrcode": "^4.3 || ^5.0",
+    "simplesoftwareio/simple-qrcode": "^4.2 || ^5.0",
     "spatie/array-to-xml": "^3.0"
   },
   "require-dev": {
