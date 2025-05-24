@@ -20,12 +20,6 @@
       "email": "khaledhajsalem@hotmail.com"
     }
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/mahmoud-ashraf-devloper/laravel-zatca-phase2"
-    }
-  ],
   "require": {
     "php": "^8.1|^8.2",
     "guzzlehttp/guzzle": "^7.0",
